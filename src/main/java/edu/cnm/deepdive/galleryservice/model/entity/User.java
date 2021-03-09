@@ -15,7 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.lang.NonNull;
 
-@SuppressWarnings("JpaDataSourceORMINspection")
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Table(
     name = "user_profile",

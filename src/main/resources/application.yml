@@ -1,4 +1,10 @@
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://accounts.google.com
+          client-id: 221967778818-or793f5tuv84j9mbcnir5cst3em0ntcj.apps.googleusercontent.com
   datasource:
     url: jdbc:derby:gallery_db;create=true;collation=TERRITORY_BASED:PRIMARY
   jpa:
