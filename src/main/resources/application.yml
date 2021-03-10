@@ -19,7 +19,6 @@ spring:
 #            scripts:
 #              action: create
 #              create-target: ddl.sql
-
 server:
   port: 18181
   servlet:
