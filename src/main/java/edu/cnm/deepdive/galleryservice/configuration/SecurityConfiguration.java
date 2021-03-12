@@ -26,7 +26,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   private final Converter<Jwt, ? extends AbstractAuthenticationToken> converter;
-
+  // this comes from the application yml
   @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
   private String issuerUri;
   @Value("${spring.security.oauth2.resourceserver.jwt.client-id}")
