@@ -1,7 +1,10 @@
 package edu.cnm.deepdive.galleryservice.model.entity;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,34 +13,34 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.lang.NonNull;
 
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
-@Table (
+@Table(
     indexes = {
         @Index(columnList = "created"),
         @Index(columnList = "title")
+
     }
 )
-public class Image {
+public class Gallery {
 
   @NonNull
   @Id
   @GeneratedValue(generator = "uuid2")
   @GenericGenerator(name = "uuid2", strategy = "uuid2")
-  @Column(name = "image_id", nullable = false, updatable = false, columnDefinition = "CHAR (16) FOR BIT DATA")
+  @Column(name = "gallery_id", nullable = false, updatable = false, columnDefinition = "CHAR(16) FOR BIT DATA")
   private UUID id;
 
   @NonNull
-  @CreationTimestamp
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false, updatable = false)
   private Date created;
@@ -49,29 +52,21 @@ public class Image {
   private Date updated;
 
   @NonNull
-  @Column(length = 100, nullable = false)
+  @Column(nullable = false, length = 100)
   private String title;
 
   @Column(length = 1024)
   private String description;
 
   @NonNull
-  @Column(nullable = false, updatable = false)
-  private String name;
-
-  @NonNull
-  @Column(nullable = false, updatable = false)
-  private String contentType;
-
-  @NonNull // foreign key column
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
-  @JoinColumn(name = "contributor_id", nullable = false, updatable = false)
-  private User contributor;
+  @JoinColumn(name = "creator_id", nullable = false, updatable = false)
+  private User creator;
 
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "gallery_id") //should this be updatable?
-  private Gallery gallery;
-
+  @OneToMany(mappedBy = "gallery", fetch = FetchType.LAZY, cascade = {
+      CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+  @OrderBy("title ASC")
+  private final List<Image> images = new LinkedList<>();
 
   @NonNull
   public UUID getId() {
@@ -89,12 +84,12 @@ public class Image {
   }
 
   @NonNull
-  public User getContributor() {
-    return contributor;
+  public User getCreator() {
+    return creator;
   }
 
-  public Gallery getGallery() {
-    return gallery;
+  public List<Image> getImages() {
+    return images;
   }
 
   @NonNull
@@ -113,24 +108,4 @@ public class Image {
   public void setDescription(String description) {
     this.description = description;
   }
-
-  @NonNull
-  public String getName() {
-    return name;
-  }
-
-  public void setName(@NonNull String name) {
-    this.name = name;
-  }
-
-  @NonNull
-  public String getContentType() {
-    return contentType;
-  }
-
-  public void setContentType(@NonNull String contentType) {
-    this.contentType = contentType;
-  }
-
 }
-

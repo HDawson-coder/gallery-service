@@ -32,32 +32,43 @@ import org.springframework.lang.NonNull;
 )
 public class User {
 
-  @NonNull
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "contributor", cascade = CascadeType.ALL)
-  @OrderBy("created DESC")
-  private final List<Image> images = new LinkedList<>();
+
   @NonNull
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid2", strategy = "uuid2")
   @Column(name = "user_id", nullable = false, updatable = false, columnDefinition = "CHAR(16) FOR BIT DATA")
   private UUID id;
+
   @NonNull
   @CreationTimestamp
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false, updatable = false)
   private Date created;
+
   @NonNull
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false)
   private Date connected;
+
   @NonNull
   @JsonIgnore
   @Column(nullable = false, updatable = false,unique = true)
   private String oauthKey;
+
   @NonNull
   @Column(nullable = false, unique = true)
   private String displayName;
+
+  @NonNull
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "contributor", cascade = CascadeType.ALL)
+  @OrderBy("created DESC")
+  private final List<Image> images = new LinkedList<>();
+
+  @NonNull
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator", cascade = CascadeType.ALL)
+  @OrderBy("created DESC")
+  private final List<Gallery> galleries = new LinkedList<>();
 
   @NonNull
   public UUID getId() {
@@ -67,6 +78,15 @@ public class User {
   @NonNull
   public Date getCreated() {
     return created;
+  }
+  @NonNull
+  public List<Image> getImages() {
+    return images;
+  }
+
+  @NonNull
+  public List<Gallery> getGalleries() {
+    return galleries;
   }
 
   @NonNull
@@ -96,8 +116,4 @@ public class User {
     this.displayName = displayName;
   }
 
-  @NonNull
-  public List<Image> getImages() {
-    return images;
-  }
 }
