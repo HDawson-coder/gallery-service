@@ -18,6 +18,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.lang.NonNull;
@@ -42,6 +43,7 @@ public class Gallery {
 
   @NonNull
   @Temporal(TemporalType.TIMESTAMP)
+  @CreationTimestamp
   @Column(nullable = false, updatable = false)
   private Date created;
 
@@ -83,13 +85,18 @@ public class Gallery {
     return updated;
   }
 
+
+  public List<Image> getImages() {
+    return images;
+  }
+
   @NonNull
   public User getCreator() {
     return creator;
   }
 
-  public List<Image> getImages() {
-    return images;
+  public void setCreator(@NonNull User creator) {
+    this.creator = creator;
   }
 
   @NonNull
