@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GalleryRepository extends CrudRepository<Gallery, UUID> {
 
+  Iterable<Gallery> getAllByOrderByTitleAsc();
+
 }
