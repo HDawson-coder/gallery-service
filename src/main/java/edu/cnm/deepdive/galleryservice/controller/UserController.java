@@ -1,9 +1,13 @@
 package edu.cnm.deepdive.galleryservice.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import edu.cnm.deepdive.galleryservice.model.dao.UserRepository;
+import edu.cnm.deepdive.galleryservice.model.entity.Image;
 import edu.cnm.deepdive.galleryservice.model.entity.User;
 import edu.cnm.deepdive.galleryservice.service.UserService;
+import edu.cnm.deepdive.galleryservice.view.ImageViews;
 import java.util.UUID;
+import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.ExposesResourceFor;
 import org.springframework.http.MediaType;
@@ -37,4 +41,11 @@ public class UserController {
         .orElseThrow();
   }
 
+  @GetMapping(value = "/{id}/images", produces = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(ImageViews.Flat.class)
+  public Iterable<Image> getImages(@PathVariable UUID id, Authentication auth) {
+    return userService.get(id)
+        .map( User::getImages)
+        .orElseThrow();
+  }
 }
