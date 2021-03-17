@@ -3,6 +3,7 @@ package edu.cnm.deepdive.galleryservice.controller;
 import edu.cnm.deepdive.galleryservice.model.entity.Gallery;
 import edu.cnm.deepdive.galleryservice.model.entity.User;
 import edu.cnm.deepdive.galleryservice.service.GalleryService;
+import edu.cnm.deepdive.galleryservice.service.ImageService;
 import java.util.UUID;
 import org.springframework.hateoas.server.ExposesResourceFor;
 import org.springframework.http.MediaType;
@@ -11,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,16 +23,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class GalleryController {
 
   private final GalleryService galleryService;
+  private final ImageService imageService;
 
-  public GalleryController(GalleryService galleryService) {
+  public GalleryController(GalleryService galleryService,
+      ImageService imageService) {
     this.galleryService = galleryService;
+    this.imageService = imageService;
   }
 
   //getPrincipal is the user. (User) is casting the user into the principal object.
- @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Gallery> post(@RequestBody Gallery gallery, Authentication auth) {
-    gallery =  galleryService.newGallery(gallery, (User) auth.getPrincipal());
-   return ResponseEntity.created(gallery.getHref()).body(gallery);
+    gallery = galleryService.newGallery(gallery, (User) auth.getPrincipal());
+    return ResponseEntity.created(gallery.getHref()).body(gallery);
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -44,5 +49,31 @@ public class GalleryController {
         .get(id)
         .orElseThrow();
   }
+
+  //consumes means true or false
+  @PutMapping(value = "/{galleryId}/images/{imageId}",
+      consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  public boolean setImageGallery(@PathVariable UUID galleryId, @PathVariable UUID imageId,
+      @RequestBody boolean imageInGallery, Authentication auth) {
+    return galleryService
+        .get(galleryId)
+        .flatMap((gallery) ->
+            imageService
+                .get(imageId)
+                .map((image) -> {
+                  if (imageInGallery) {
+                    image.setGallery(gallery);
+                    gallery.getImages().add(image);
+                  } else {
+                    image.setGallery(null);
+                    gallery.getImages().remove(image);
+                  }
+                  return galleryService.save(gallery);
+                })
+        )
+        .map((gallery) -> imageInGallery)
+        .orElseThrow();
+  }
+
 }
 
