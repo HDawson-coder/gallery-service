@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ImageRepository extends JpaRepository<Image, UUID> {
 
-  //TODO something here later
+  Iterable<Image> getAllByOrderByCreatedDesc();
+
+
 
 }
