@@ -42,8 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests((auth) ->
-        auth.
-            antMatchers(HttpMethod.GET, "/images/**/content").permitAll()
+        auth
             .anyRequest().authenticated())
         .oauth2ResourceServer().jwt()
         .jwtAuthenticationConverter(converter);
