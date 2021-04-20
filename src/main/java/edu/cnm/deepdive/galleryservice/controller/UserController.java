@@ -9,6 +9,7 @@ import edu.cnm.deepdive.galleryservice.view.ImageViews;
 import java.util.UUID;
 import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.hateoas.server.ExposesResourceFor;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/users")
 @ExposesResourceFor(User.class)
+@Profile("service")
 public class UserController {
 
   private final UserService userService;
