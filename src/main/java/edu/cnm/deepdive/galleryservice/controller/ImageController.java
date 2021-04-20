@@ -1,9 +1,7 @@
 package edu.cnm.deepdive.galleryservice.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import edu.cnm.deepdive.galleryservice.model.entity.Gallery;
 import edu.cnm.deepdive.galleryservice.model.entity.Image;
-import edu.cnm.deepdive.galleryservice.model.entity.User;
 import edu.cnm.deepdive.galleryservice.service.GalleryService;
 import edu.cnm.deepdive.galleryservice.service.ImageService;
 import edu.cnm.deepdive.galleryservice.view.ImageViews;
@@ -16,14 +14,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.HttpMediaTypeException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/images")

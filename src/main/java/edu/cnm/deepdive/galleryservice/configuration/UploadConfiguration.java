@@ -39,7 +39,6 @@ public class UploadConfiguration {
   /**
    * Specifies whether the upload directory should be interpreted relative to the
    * application home directory.
-   * @return
    */
 
   public void setApplicationHome(boolean applicationHome) {
